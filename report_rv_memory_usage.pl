@@ -1,4 +1,22 @@
 #!/usr/bin/perl
+## -----------------------------------------------------------------------
+##
+##   Copyright 2012 Victor Skurikhin - All Rights Reserved
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+## -----------------------------------------------------------------------
 use Getopt::Std;
 getopts('d:ov');
 
@@ -26,9 +44,7 @@ my $sid = 0;
 my $svmon_kern_segs = "svmon -S -O filtercat=kernel,unit=KB";
 
 printf("Exec(\"%s\")\r", $svmon_kern_segs) if ($verbose);
-# open(SVMON_KERNEL, "/tmp/2012-04-23.svmon_segs_kernel.log")
-#    Vsid      Esid Type Description              PSize  Inuse   Pin Pgsp Virtual
-#  22a062         - work kernel heap                  m 262144 262144    0  262144
+# 
 open(SVMON_KERNEL, sprintf("%s |", $svmon_kern_segs))
   or die "perl cant run svmon";
 while(<SVMON_KERNEL>) { 
@@ -68,7 +84,6 @@ my %shared_inuse_sidsize = {};
 my $svmon_shared_segs = "svmon -S -O filtercat=shared,pidlist=on,unit=KB";
 
 printf("Exec(\"%s\")\r", $svmon_shared_segs) if ($verbose);
-# open(SVMON_SHARED, "/tmp/2012-04-23.svmon_segs_shared.log")
 open(SVMON_SHARED, sprintf("%s |", $svmon_shared_segs))
   or die "perl cant run svmon";
 while(<SVMON_SHARED>) { 
@@ -116,7 +131,6 @@ my $ps_ew = "ps ew ";
 my $sort_by_virt = "sort -r -n +5";
 
 printf("Exec(\"%s\")\n", $svmon_procsexcl_segs) if ($verbose);
-# open(SVMON_EXCLUSIVE, "/tmp/2012-04-23.svmon_process_exclusive.log")
 open(SVMON_EXCLUSIVE, sprintf("%s|%s|", $svmon_procsexcl_segs, $sort_by_virt))
   or die "perl cant run svmon";
 print <<EOH
@@ -127,7 +141,7 @@ EOH
   if ($verbose);
 while(<SVMON_EXCLUSIVE>) { 
   chomp;
-  #printf("%s\n",$_) if (/^\s*\d+\s+\w+\s+\d+\s+\d+\s+\d+\s+\d+$/ && $verbose);
+  # printf("%s\n",$_) if (/^\s*\d+\s+\w+\s+\d+\s+\d+\s+\d+\s+\d+$/ && $verbose);
  
   if (/^\s*(\d+)\s+(\w+)\s+(\d+)\s+\d+\s+(\d+)\s+(\d+)$/ && $oracle) {
 	my $oraclep = 0;
@@ -201,7 +215,6 @@ my $sort_by_virt = "sort -r -n +5";
 
 printf("Exec(\"%s\")\r", $svmon_procsoths_segs) if ($verbose);
 
-#open(SVMON_OTHERS, "/tmp/2012-04-23.svmon_process_all.log")
 open(SVMON_OTHERS, sprintf("%s |", $svmon_procsoths_segs))
   or die "perl cant run svmon";
 while(<SVMON_OTHERS>) { 
