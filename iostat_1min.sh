@@ -14,5 +14,5 @@ then
   $tail -1 /var/adm/sa/iostat$D | $grep -v ^$DATE > /dev/null \
   && $rm -f /var/adm/sa/iostat$D
 fi
-/usr/local/bin/iostat_1min.pl >> /var/adm/sa/iostat$D \
+/usr/local/sbin/iostat_1min.pl >> /var/adm/sa/iostat$D \
                              2>> /var/sys/log/iostat_1min.pl.log
